@@ -1,6 +1,6 @@
 ---
 title: "Lab 12 - Create a project website"
-author: "Abigail Horn"
+author: "Cynthia Begay"
 output: 
     html_document:
         toc: TRUE

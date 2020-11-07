@@ -1,6 +1,6 @@
 ---
 title: "PM566 Final Project"
-author: "Your Name"
+author: "Cynthia Begay"
 output: 
     html_document:
         toc: TRUE
