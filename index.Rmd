@@ -9,9 +9,10 @@ output:
 
 <br>
 
-This is my PM566 Final Project website. I will showcase a few interactive visuals here.
+Introduction: 
+The COVID Racial Data Tracker is a volunteer organization launched from The Atlantic and was created in collaboration between the COVID Tracking Project and the Boston University Center for Antiracist Research. On April 12, 2020, this team began collecting race and ethnicity data from every state and eventually US territories. The tracker is updated twice per week. This dataset includes the total number of COVID cases and number of reported deaths due to COVID by race and ethnicity. While this is the only COVID related dataset I could find that reports race and ethnicity, the project acknowledges this is not a comprehensive dataset on race and ethnicity. 
+As the COVID-19 pandemic unfolds, we are quickly learning about the disparity between race and COVID-19 cases. Currently Black, Indigenous, and Latinx people are most affected by COVID-19. As it stands, Black people have the highest disparity and are dying 2.3 times the rate of white people. American Indian and Alaska Native (AIAN) have the second highest disparity and currently have a death rate of 65 per 100,000 people compared to non-Hispanic white 43 per 100,000. Historically, AIAN communities are left out of the conversation when it comes to reporting data, especially emerging data like COVID-19 cases/deaths. The current national conversation around AIAN COVID disparities has been about (my tribe) the Navajo Nation, which at its worst, had the highest infection rate in the country (higher than New York in its peak). It is important to understand the rest of the landscape in the US when it comes to tribal communities as 70% of the AIAN population live in urban cities. I am using this project to explore AIAN COVID rates by state to understand where the highest disparities lie. The questions I will be exploring in this project are (1) which states reported the highest AIAN COVID cases in the US and (2) which states reported the highest AIAN COVID deaths in the US?
 
-(Your output should look something like this)
 
 <br>
 
@@ -23,6 +24,13 @@ library(dplyr)
 library(plotly)
 library(DT)
 library(knitr)
+
+library(leaflet)
+library(hrbrthemes)
+library(gcookbook)
+library(viridis)
+library(forcats)
+library(kableExtra)
 
 # Initialize code chunk options
 opts_chunk$set(
@@ -55,7 +63,56 @@ opts_chunk$set(
 First I will source any necessary code, e.g. `process_covid_data.R`:
 
 ```{r load-data}
-source("process_COVID_data.R")
+setwd("/Users/cynthiabegay/PM-566-first-project/Final Project")
+Data_race <-data.table::fread("RaceData_Final.csv")
+
+#Variables of interest are day, month, year, state, total cases, AIAN cases, AIAN deaths
+Data_race <- Data_race %>% select (Date, Month, Day, Year, State, State_Code, Cases_AIAN, Cases_Total, Deaths_AIAN, Deaths_Total)
+
+#Try it out
+Data_race %>% 
+  group_by(State) %>% 
+  summarise_all(~sum(is.na(.)))
+
+ #Evaluating which states have 51 missing AIAN Cases
+Data_race2 <- Data_race %>%
+  group_by(State) %>% 
+  summarise_all(~sum(is.na(.))) %>%
+  filter(Cases_AIAN == 51) %>%
+  select(State)
+
+#Removing states with all missing AIAN cases
+Data_race_remove <- Data_race %>%
+  filter(!(State %in% Data_race2$State))
+
+#Replace missing values to 0
+Data_race_remove$Cases_AIAN_fmt <- ifelse(is.na(Data_race_remove$Cases_AIAN), 0, Data_race_remove$Cases_AIAN)
+
+#Evaluating which states have 51 missing AIAN Deaths
+Data_race_eval <- Data_race %>%
+  group_by(State) %>% 
+  summarise_all(~sum(is.na(.))) %>%
+  filter(Deaths_AIAN == 51) %>%
+  select(State)
+
+#Replace missing values to 0
+Data_race_remove$Deaths_AIAN_fmt <- ifelse(is.na(Data_race_remove$Deaths_AIAN), 0, Data_race_remove$Deaths_AIAN)
+
+```
+
+```{r October df, EVAL=TRUE}
+#Keep current date
+Data_race_current <- Data_race_remove
+
+Data_race_current$Date_fmt <- as.Date(Data_race_current$Date)
+with (Data_race_current, Data_race_current[Date == "10/4/20"])
+```
+```{r April date df, EVAL=TRUE}
+#Keep current date
+Data_race_init <- Data_race_remove
+
+Data_race_init$Date_fmt <- as.Date(Data_race_init$Date)
+with (Data_race_init, Data_race_init[Date == "4/12/20"])
 ```
 
 <br>
@@ -66,32 +123,158 @@ Then I will add some code to create the **plotly** figures
 
 Note: You need to name each code chunk, like this one: `plot1`
 
-```{r plot1, class.source="code-r-small"}
 
-p1_scatter <- cv_states_today %>% 
-  plot_ly(x = ~pop_density, y = ~deathsper100k,
-          type = 'scatter', mode = 'markers', color = ~state,
-          size = ~population, sizes = c(5, 70), marker = list(sizemode='diameter', opacity=0.5),
-          hoverinfo = 'text',
-          text = ~paste( paste(state, ":", sep=""), paste(" Cases per 100k: ", per100k, sep="") , paste(" Deaths per 100k: ",
-                        deathsper100k, sep=""), sep = "<br>")) %>%
-  layout(title = "Population-normalized COVID-19 deaths vs. population density",
-                  yaxis = list(title = "Deaths per 100k"), xaxis = list(title = "Population Density"),
-         hovermode = "compare")
+```{r plot 1, EVAL=TRUE}
+p1<-ggplot(Data_race_remove, 
+           aes( x=Month, y=Cases_AIAN_fmt, color=State )
+           ) + geom_line() + geom_point(size = .5, alpha = 0.5)
+ggplotly(p1)
 
-# filter out "District of Columbia"
-cv_states_today_scatter <- cv_states_today %>% filter(state!="District of Columbia")
+plot_ly(Data_race_remove, x = ~Month, y = ~Cases_AIAN_fmt, color = ~State, type = "scatter", mode = "lines")
 
-p2_scatter <- cv_states_today_scatter %>% 
-  plot_ly(x = ~pop_density, y = ~deathsper100k,
-          type = 'scatter', mode = 'markers', color = ~state,
-          size = ~population, sizes = c(5, 70), marker = list(sizemode='diameter', opacity=0.5),
-          hoverinfo = 'text',
-          text = ~paste( paste(state, ":", sep=""), paste(" Cases per 100k: ", per100k, sep="") , paste(" Deaths per 100k: ",
-                        deathsper100k, sep=""), sep = "<br>")) %>%
-  layout(title = "Population-normalized COVID-19 deaths vs. population density",
-                  yaxis = list(title = "Deaths per 100k"), xaxis = list(title = "Population Density"),
-         hovermode = "compare")
+Data_race_remove %>% filter(State=="AZ") %>% plot_ly(x = ~Month, y = ~Cases_AIAN_fmt, type = "scatter", mode = "lines") %>% add_lines(x=~Month, y=~Deaths_AIAN, type = "scatter", mode = "lines") 
+```
+
+```{r heat map cases}
+library(tidyr)
+
+Data_race_remove2 <- Data_race_remove %>% select(State, Date, Cases_AIAN_fmt,) 
+Data_race_remove3 <- as.data.frame(pivot_wider(Data_race_remove2, names_from = State, values_from = Cases_AIAN_fmt))
+rownames(Data_race_remove3) <- Data_race_remove3$Date
+Data_race_remove3$Date <- NULL
+Data_race_remove3 <- as.matrix(Data_race_remove3)
+
+# Create a heatmap using plot_ly()
+plot_ly(x=colnames(Data_race_remove3), y=rownames(Data_race_remove3),
+             z=~Data_race_remove3,
+             type="heatmap",
+            colorbar = list(title = "AIAN Covid-19 Cases"),
+             showscale=T) 
+
+plot_ly(x=colnames(Data_race_remove3), y=rownames(Data_race_remove3),
+             z=~Data_race_remove3,
+             type="surface",
+            colorbar = list(title = "AIAN Covid-19 Cases"),
+             showscale=T) 
+        
+```
+
+```{r heat map deaths}
+Data_race_remove4 <- Data_race_remove %>% select(State, Date, Deaths_AIAN_fmt) 
+Data_race_remove5 <- as.data.frame(pivot_wider(Data_race_remove4, names_from = State, values_from = Deaths_AIAN_fmt))
+rownames(Data_race_remove5) <- Data_race_remove5$Date
+Data_race_remove5$Date <- NULL
+Data_race_remove5 <- as.matrix(Data_race_remove5)
+
+# Create a heatmap using plot_ly()
+plot_ly(x=colnames(Data_race_remove5), y=rownames(Data_race_remove5),
+             z=~Data_race_remove5,
+             type="heatmap",
+            colorbar = list(title = "AIAN Covid-19 Deaths"),
+             showscale=T)  
+```
+```{r April Map AIAN Cases, class.source="code-r-small"}
+# Create hover text
+Data_race_init$hover <- with(Data_race_init, paste(State, '<br>', "AIAN Cases:", Cases_AIAN_fmt))
+
+# Set up mapping details
+set_map_details <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+# Make sure both maps are on the same color scale
+shadeLimit <- 250
+
+# Create the map
+fig <- plot_geo(Data_race_init, locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~Cases_AIAN_fmt, text = ~hover, locations = ~State,
+    color = ~Cases_AIAN_fmt, colors = 'Blues'
+  )
+
+fig <- fig %>% colorbar(title = "AIAN Covid-19 Cases", limits = c(0,shadeLimit))
+
+fig <- fig %>% layout(
+    title = paste('AIAN Covid-19 Rates by State as of April 12, 2020', '<br>(Hover for value)'),
+    geo = set_map_details
+  )
+fig_Apr12 <- fig
+```
+
+
+```{r map, class.source="code-r-small"}
+# Create hover text
+Data_race_current$hover <- with(Data_race_current, paste(State, '<br>', "AIAN Cases:", Cases_AIAN_fmt))
+
+# Set up mapping details
+set_map_details <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+# Make sure both maps are on the same color scale
+shadeLimit <- 13000
+
+# Create the map
+fig <- plot_geo(Data_race_current, locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~Cases_AIAN_fmt, text = ~hover, locations = ~State,
+    color = ~Cases_AIAN_fmt, colors = 'Purples'
+  )
+
+fig <- fig %>% colorbar(title = "AIAN Covid-19 Cases", limits = c(0,shadeLimit))
+
+fig <- fig %>% layout(
+    title = paste('AIAN Covid-19 Rates by State as of October 04, 2020', '<br>(Hover for value)'),
+    geo = set_map_details
+  )
+fig_Oct4 <- fig
+
+subplot(fig_Apr12, fig_Oct4)
+```
+
+
+```{r deaths map, class.source="code-r-small"}
+# Extract the data for each state by its abbreviation
+# Create hover text
+Data_race_current$hover <- with(Data_race_current, paste(State, '<br>', "AIAN Deaths:", Deaths_AIAN_fmt))
+
+# Set up mapping details
+set_map_details <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+# Make sure both maps are on the same color scale
+shadeLimit <- 700
+
+# Create the map
+fig <- plot_geo(Data_race_current, locationmode = 'USA-states') %>% 
+  add_trace(
+    z = ~Deaths_AIAN_fmt, text = ~hover, locations = ~State,
+    color = ~Deaths_AIAN_fmt, colors = 'Reds'
+  )
+
+fig <- fig %>% colorbar(title = "AIAN Covid-19 Cases", limits = c(0,shadeLimit))
+
+fig <- fig %>% layout(
+    title = paste('AIAN Covid-19 Rates by State as of October 04, 2020', '<br>(Hover for value)'),
+    geo = set_map_details
+  )
+fig_Oct4_deaths <- fig
+
+### Plot side by side 
+### FINISH THE CODE HERE ###
+subplot(fig_Oct4, fig_Oct4_deaths )
+
+  
 ```
 
 <br>
@@ -100,16 +283,16 @@ p2_scatter <- cv_states_today_scatter %>%
 
 Create tabs to display each figure
 
-### Scatterplot: with DC
+### Map: AIAN Covid-19 Cases
 
 ```{r p1}
-p1_scatter
+fig_Oct4
 ```
 
-### Scatterplot: without DC
+### Map: AIAN Covid-19 Deaths
 
 ```{r p2}
-p2_scatter
+fig_Oct4_deaths 
 ```
 
 ## {-}
