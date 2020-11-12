@@ -46,7 +46,7 @@ opts_chunk$set(
   class.source = "code-r")
 ```
 
-```{css, echo = FALSE}
+```{css, echo=FALSE}
 .code-r { /* Code block */
   font-size: 15px;
 }
@@ -58,11 +58,7 @@ opts_chunk$set(
 
 <br>
 
-## First step
-
-First I will source any necessary code, e.g. `process_covid_data.R`:
-
-```{r load-data}
+```{r load-data, message=FALSE, echo=FALSE, warning=FALSE}
 setwd("/Users/cynthiabegay/PM-566-first-project/Final Project")
 Data_race <-data.table::fread("RaceData_Final.csv")
 
@@ -100,14 +96,15 @@ Data_race_remove$Deaths_AIAN_fmt <- ifelse(is.na(Data_race_remove$Deaths_AIAN), 
 
 ```
 
-```{r October df, EVAL=TRUE}
+```{r October df, message=FALSE, echo=FALSE, warning=FALSE}
 #Keep current date
 Data_race_current <- Data_race_remove
 
 Data_race_current$Date_fmt <- as.Date(Data_race_current$Date)
 with (Data_race_current, Data_race_current[Date == "10/4/20"])
 ```
-```{r April date df, EVAL=TRUE}
+
+```{r April date df, message=FALSE, echo=FALSE, warning=FALSE}
 #Keep current date
 Data_race_init <- Data_race_remove
 
@@ -117,25 +114,49 @@ with (Data_race_init, Data_race_init[Date == "4/12/20"])
 
 <br>
 
-## Second step
+## Plotly figures 
 
-Then I will add some code to create the **plotly** figures
+Below are graphs representing Covid-19 cases among American Indians and Alaska Natives in the US by state. The last figure is investigating the state with the highest reported cases of Covid-19 among AIAN--Arizona. 
+```{r bar chart, message=FALSE, echo=FALSE, warning=FALSE}
+fig <- plot_ly(Data_race_current, x = ~State, y = ~Cases_AIAN_fmt, type = 'bar', text = text,
+        marker = list(color = 'rgb(158,202,225)',
+                      line = list(color = 'rgb(8,48,107)',
+                                  width = 1.5)))
+fig <- fig %>% layout(title = "Overall AIAN Covid-19 Cases by State",
+         xaxis = list(title = "State"),
+         yaxis = list(title = "AIAN Covid-19 Cases"))
 
-Note: You need to name each code chunk, like this one: `plot1`
-
-
-```{r plot 1, EVAL=TRUE}
-p1<-ggplot(Data_race_remove, 
-           aes( x=Month, y=Cases_AIAN_fmt, color=State )
-           ) + geom_line() + geom_point(size = .5, alpha = 0.5)
-ggplotly(p1)
-
-plot_ly(Data_race_remove, x = ~Month, y = ~Cases_AIAN_fmt, color = ~State, type = "scatter", mode = "lines")
-
-Data_race_remove %>% filter(State=="AZ") %>% plot_ly(x = ~Month, y = ~Cases_AIAN_fmt, type = "scatter", mode = "lines") %>% add_lines(x=~Month, y=~Deaths_AIAN, type = "scatter", mode = "lines") 
+fig
 ```
 
-```{r heat map cases}
+
+```{r plot 1, message=FALSE, echo=FALSE, warning=FALSE}
+fig <-plot_ly(Data_race_remove, x = ~Month, y = ~Cases_AIAN_fmt, color = ~State, type = "scatter", mode = "lines")
+
+fig<-fig %>% layout(
+              title = "AIAN Rates in US by State"
+              )
+Scatter_US <- fig
+
+subplot(Scatter_US)
+```
+
+
+```{r plot 2, message=FALSE, echo=FALSE, warning=FALSE}
+fig<- Data_race_remove %>% filter(State=="AZ") %>% plot_ly(x = ~Month, y = ~Cases_AIAN_fmt, type = "scatter", mode = "lines", name='AIAN Covid-19 Cases') %>% add_lines(x=~Month, y=~Deaths_AIAN, type = "scatter", mode = "lines", name='AIAN Deaths')
+
+fig<-fig %>% layout(
+              title = "AIAN Rates in Arizona",
+              legend=list(title=list(text='<b> Arizona </b>')))
+Scatter_AZ <- fig
+
+subplot(Scatter_AZ)
+```
+## Heat Maps
+
+Below is a heat map of AIAN Covid-19 Cases by State
+
+```{r heat map cases, message=FALSE, echo=FALSE, warning=FALSE}
 library(tidyr)
 
 Data_race_remove2 <- Data_race_remove %>% select(State, Date, Cases_AIAN_fmt,) 
@@ -149,8 +170,11 @@ plot_ly(x=colnames(Data_race_remove3), y=rownames(Data_race_remove3),
              z=~Data_race_remove3,
              type="heatmap",
             colorbar = list(title = "AIAN Covid-19 Cases"),
-             showscale=T) 
+             showscale=T)
+```
 
+Below is a 3-d visual representation of AIAN Covid-19 Cases by State
+```{r heat map, message=FALSE, echo=FALSE, warning=FALSE}
 plot_ly(x=colnames(Data_race_remove3), y=rownames(Data_race_remove3),
              z=~Data_race_remove3,
              type="surface",
@@ -158,8 +182,9 @@ plot_ly(x=colnames(Data_race_remove3), y=rownames(Data_race_remove3),
              showscale=T) 
         
 ```
+Below is a heat map of AIAN deaths due to Covid-19 by state.
 
-```{r heat map deaths}
+```{r heat map deaths, message=FALSE, echo=FALSE, warning=FALSE}
 Data_race_remove4 <- Data_race_remove %>% select(State, Date, Deaths_AIAN_fmt) 
 Data_race_remove5 <- as.data.frame(pivot_wider(Data_race_remove4, names_from = State, values_from = Deaths_AIAN_fmt))
 rownames(Data_race_remove5) <- Data_race_remove5$Date
@@ -173,7 +198,8 @@ plot_ly(x=colnames(Data_race_remove5), y=rownames(Data_race_remove5),
             colorbar = list(title = "AIAN Covid-19 Deaths"),
              showscale=T)  
 ```
-```{r April Map AIAN Cases, class.source="code-r-small"}
+Below is a geographic map showing AIAN Covid-19 cases by state as of April 12, 2020
+```{r April Map AIAN Cases, class.source="code-r-small", message=FALSE, echo=FALSE, warning=FALSE}
 # Create hover text
 Data_race_init$hover <- with(Data_race_init, paste(State, '<br>', "AIAN Cases:", Cases_AIAN_fmt))
 
@@ -189,7 +215,7 @@ set_map_details <- list(
 shadeLimit <- 250
 
 # Create the map
-fig <- plot_geo(Data_race_current, locationmode = 'USA-states') %>% 
+fig <- plot_geo(Data_race_init, locationmode = 'USA-states') %>% 
   add_trace(
     z = ~Cases_AIAN_fmt, text = ~hover, locations = ~State,
     color = ~Cases_AIAN_fmt, colors = 'Blues'
@@ -204,8 +230,8 @@ fig <- fig %>% layout(
 fig_Apr12 <- fig
 ```
 
-
-```{r map, class.source="code-r-small"}
+Below is a geographic map showing AIAN Covid-19 cases by state as of October 4, 2020
+```{r map, class.source="code-r-small", message=FALSE, echo=FALSE, warning=FALSE}
 # Create hover text
 Data_race_current$hover <- with(Data_race_current, paste(State, '<br>', "AIAN Cases:", Cases_AIAN_fmt))
 
@@ -238,8 +264,8 @@ fig_Oct4 <- fig
 subplot(fig_Apr12, fig_Oct4)
 ```
 
-
-```{r deaths map, class.source="code-r-small"}
+Below is a geographic map showing AIAN deaths due to Covid-19 by state as of October 4, 2020
+```{r deaths map, class.source="code-r-small", message=FALSE, echo=FALSE, warning=FALSE}
 # Extract the data for each state by its abbreviation
 # Create hover text
 Data_race_current$hover <- with(Data_race_current, paste(State, '<br>', "AIAN Deaths:", Deaths_AIAN_fmt))
@@ -277,21 +303,15 @@ subplot(fig_Oct4, fig_Oct4_deaths )
   
 ```
 
-<br>
+<br> 
 
-## Third step {.tabset}
+## Map: AIAN Covid-19 Cases {.tabset}
 
-Create tabs to display each figure
-
-### Map: AIAN Covid-19 Cases
-
-```{r p1}
+```{r p1, echo=FALSE}
 fig_Oct4
 ```
 
-### Map: AIAN Covid-19 Deaths
-
-```{r p2}
+```{r p2, echo=FALSE}
 fig_Oct4_deaths
 ```
 
@@ -299,7 +319,7 @@ fig_Oct4_deaths
 
 <br>
 
-Done!
+
 
 <br>
 <br>

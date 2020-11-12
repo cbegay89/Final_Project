@@ -1,0 +1,80 @@
+---
+title: "Midterm"
+author: Cynthia Begay
+output: github_document
+---
+
+
+```{r}
+#install.packages(c("data.table","leaflet"))
+#install.packages("R.utils")
+#install.packages("lubridate")
+#install.packages("tufte")
+library(data.table)
+library(leaflet)
+library(tidyverse)
+```
+
+```{r}
+# 1. Read in the data
+
+setwd("/Users/cynthiabegay/PM-566-first-project/Final Project")
+Data_race <-data.table::fread("racedataentryCRDT.csv")
+```
+
+```{r}
+dim(Data_race)
+head(Data_race)
+tail(Data_race)
+```
+
+```{r}
+# Dealing with NAs and 999999
+Data_race[, Date   := fifelse(Date == 9999999999, NA_integer_, Date)]
+Data_race[, Cases_Total   := fifelse(Cases_Total == "", NA_character_, Cases_Total)]
+Data_race[, Cases_White   := fifelse(Cases_White == "", NA_character_, Cases_White)]
+Data_race[, Cases_Black   := fifelse(Cases_Black == 9999999999, NA_integer_, Cases_Black)]
+Data_race[, Cases_LatinX   := fifelse(Cases_LatinX == 9999999999, NA_integer_, Cases_LatinX)]
+Data_race[, Cases_Asian   := fifelse(Cases_Asian == 9999999999, NA_integer_, Cases_Asian)]
+Data_race[, Cases_AIAN   := fifelse(Cases_AIAN == 9999999999, NA_integer_, Cases_AIAN)]
+Data_race[, Cases_NHPI   := fifelse(Cases_NHPI == 9999999999, NA_integer_, Cases_NHPI)]
+Data_race[, Cases_Multiracial   := fifelse(Cases_Multiracial == 9999999999, NA_integer_, Cases_Multiracial)]
+Data_race[, Cases_Other   := fifelse(Cases_Other == 9999999999, NA_integer_, Cases_Other)]
+Data_race[, Cases_Unknown   := fifelse(Cases_Unknown == 9999999999, NA_integer_, Cases_Unknown)]
+Data_race[, Cases_Ethnicity_Hispanic   := fifelse(Cases_Ethnicity_Hispanic == 9999999999, NA_integer_, Cases_Ethnicity_Hispanic)]
+Data_race[, Cases_Ethnicity_NonHispanic   := fifelse(Cases_Ethnicity_NonHispanic == 9999999999, NA_integer_, Cases_Ethnicity_NonHispanic)]
+
+
+Data_race[, Deaths_Total   := fifelse(Deaths_Total == 9999999999, NA_integer_, Deaths_Total)]
+Data_race[, Deaths_White   := fifelse(Deaths_White == 9999999999, NA_integer_, Deaths_White)]
+Data_race[, Deaths_Black   := fifelse(Deaths_Black == 9999999999, NA_integer_, Deaths_Black)]
+Data_race[, Deaths_LatinX   := fifelse(Deaths_LatinX == 9999999999, NA_integer_, Deaths_LatinX)]
+Data_race[, Deaths_Asian   := fifelse(Deaths_Asian == 9999999999, NA_integer_, Deaths_Asian)]
+Data_race[, Deaths_AIAN   := fifelse(Deaths_AIAN == 9999999999, NA_integer_, Deaths_AIAN)]
+Data_race[, Deaths_NHPI   := fifelse(Deaths_NHPI == 9999999999, NA_integer_, Deaths_NHPI)]
+Data_race[, Deaths_Multiracial   := fifelse(Deaths_Multiracial == 9999999999, NA_integer_, Deaths_Multiracial)]
+Data_race[, Deaths_Other   := fifelse(Deaths_Other == 9999999999, NA_integer_, Deaths_Other)]
+Data_race[, Deaths_Unknown   := fifelse(Deaths_Unknown == 9999999999, NA_integer_, Deaths_Unknown)]
+Data_race[, Deaths_Ethnicity_Hispanic   := fifelse(Deaths_Ethnicity_Hispanic == 9999999999, NA_integer_, Deaths_Ethnicity_Hispanic)]
+Data_race[, Deaths_Ethnicity_NonHispanic   := fifelse(Deaths_Ethnicity_NonHispanic == 9999999999, NA_integer_, Deaths_Ethnicity_NonHispanic)]
+Data_race[, Deaths_Ethnicity_Unknown   := fifelse(Deaths_Ethnicity_Unknown == 9999999999, NA_integer_, Deaths_Ethnicity_Unknown)]
+
+```
+
+```{r}
+Data_race[1:5, .(Cases_LatinX, State, Cases_Total)]
+```
+```{r}
+boxplot(Cases_AIAN ~ month, data = Data_race_date, col="red")
+table(Data_race_date$Cases_AIAN)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

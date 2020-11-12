@@ -1,0 +1,6 @@
+"0",""
+"0","plot_ly(x=colnames(Data_race_remove3), y=rownames(Data_race_remove3),"
+"0","             z=~Data_race_remove3,"
+"0","             type=""surface"","
+"0","            colorbar = list(title = ""AIAN Covid-19 Cases""),"
+"0","             showscale=T) "

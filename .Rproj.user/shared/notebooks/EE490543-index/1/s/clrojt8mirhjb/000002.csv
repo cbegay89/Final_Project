@@ -1,0 +1,5 @@
+"0","#Keep current date"
+"0","Data_race_current <- Data_race_remove"
+"0",""
+"0","Data_race_current$Date_fmt <- as.Date(Data_race_current$Date)"
+"0","with (Data_race_current, Data_race_current[Date == ""10/4/20""])"

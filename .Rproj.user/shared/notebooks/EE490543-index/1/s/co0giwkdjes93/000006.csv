@@ -1,0 +1,8 @@
+"0","fig <-plot_ly(Data_race_remove, x = ~Month, y = ~Cases_AIAN_fmt, color = ~State, type = ""scatter"", mode = ""lines"")"
+"0",""
+"0","fig<-fig %>% layout("
+"0","              title = ""AIAN Rates in US by State"""
+"0","              )"
+"0","Scatter_US <- fig"
+"0",""
+"0","subplot(Scatter_US)"

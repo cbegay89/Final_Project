@@ -1,0 +1,2 @@
+"0",""
+"0","Data_race_remove %>% filter(State==""AZ"") %>% plot_ly(x = ~Month, y = ~Cases_AIAN_fmt, type = ""scatter"", mode = ""lines"") %>% add_lines(x=~Month, y=~Deaths_AIAN, type = ""scatter"", mode = ""lines"") "

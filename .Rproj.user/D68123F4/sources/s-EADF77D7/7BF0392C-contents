@@ -1,0 +1,74 @@
+---
+title: "Midterm"
+author: Cynthia Begay
+output: github_document
+---
+
+
+```{r}
+#install.packages(c("data.table","leaflet"))
+#install.packages("R.utils")
+#install.packages("lubridate")
+#install.packages("tufte")
+library(data.table)
+library(leaflet)
+library(tidyverse)
+```
+
+```{r}
+# 1. Read in the data
+
+setwd("/Users/cynthiabegay/PM-566-first-project/Final Project")
+Data_race <-data.table::fread("racedataentryCRDT.csv")
+```
+
+```{r}
+dim(Data_race)
+head(Data_race)
+tail(Data_race)
+```
+```{r}
+str(Data_race)
+```
+
+```{r}
+summary(Data_race[,3:28])
+```
+
+```{r}
+Data_race_date<-
+  Data_race %>%
+  mutate(Date=substr(Date,1,4),month=substr(Date,5,6),day=substr(Date,7,8))
+```
+
+```{r}
+boxplot(Cases_AIAN ~ month, data = Data_race_date, col="red")
+table(Data_race_date$Cases_AIAN)
+```
+
+```{r}
+# Exclude the missing observations
+Data_race_drop <-Data_race %>%
+na.omit()		
+dim(Data_race_drop)
+## Including Plots
+```
+```{r}
+Data_race_date %>% 
+  ggplot(mapping = aes(x=Date, y= Cases_AIAN, color=State))+
+  geom_point()+
+  stat_smooth(method=lm)
+```
+```{r}
+
+```
+
+
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
