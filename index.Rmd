@@ -105,7 +105,7 @@ Data_race_init <- Data_race_remove %>% filter(Date=="4/12/20")
 
 <br>
 
-# AIAN Covid-19 Cases by State as of 10/04/20 
+# AIAN Covid-19 Cases by State
 
 This figure represents all reported American Indian and Alaska Native Covid-19 cases in the US by state* and DC. As of October 4th, the 3 highest reported AIAN cases are from Arizona, New Mexico, and Oklahoma. 
 
@@ -116,7 +116,7 @@ fig <- plot_ly(Data_race_current, x = ~State, y = ~Cases_AIAN_fmt, type = 'bar',
         marker = list(color = 'rgb(158,202,225)',
                       line = list(color = 'rgb(8,48,107)',
                                   width = 1.5)))
-fig <- fig %>% layout(title = "Overall AIAN Covid-19 Cases by State",
+fig <- fig %>% layout(title = "Overall AIAN Covid-19 Cases by State 10/04/20",
          xaxis = list(title = "State"),
          yaxis = list(title = "AIAN Covid-19 Cases"))
 
