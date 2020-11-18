@@ -1,0 +1,8 @@
+"0","fig<- Data_race_remove %>% filter(State==""NM"") %>% plot_ly(x = ~Month, y = ~Cases_AIAN_fmt, type = ""scatter"", mode = ""lines"", name='AIAN Covid-19 Cases') %>% add_lines(x=~Month, y=~Deaths_AIAN, type = ""scatter"", mode = ""lines"", name='AIAN Deaths')"
+"0",""
+"0","fig<-fig %>% layout("
+"0","              title = ""AIAN Rates in New Mexico"","
+"0","              legend=list(title=list(text='<b> New Mexico </b>')))"
+"0","Scatter_NM <- fig"
+"0",""
+"0","subplot(Scatter_NM)"

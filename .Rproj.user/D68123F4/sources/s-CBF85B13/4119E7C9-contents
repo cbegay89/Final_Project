@@ -96,21 +96,12 @@ Data_race_remove$Deaths_AIAN_fmt <- ifelse(is.na(Data_race_remove$Deaths_AIAN), 
 
 ```
 
-```{r October df, message=FALSE, echo=FALSE, warning=FALSE}
-#Keep current date
-Data_race_current <- Data_race_remove
-
-Data_race_current$Date_fmt <- as.Date(Data_race_current$Date)
-with (Data_race_current, Data_race_current[Date == "10/4/20"])
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+#create date with filter
+Data_race_oct <- Data_race_remove %>% filter(Date=="10/4/20")
+Data_race_apr <- Data_race_remove %>% filter(Date=="4/12/20")
 ```
 
-```{r April date df, message=FALSE, echo=FALSE, warning=FALSE}
-#Keep current date
-Data_race_init <- Data_race_remove
-
-Data_race_init$Date_fmt <- as.Date(Data_race_init$Date)
-with (Data_race_init, Data_race_init[Date == "4/12/20"])
-```
 
 <br>
 

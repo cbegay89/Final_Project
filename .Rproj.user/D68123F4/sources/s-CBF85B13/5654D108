@@ -1,0 +1,32 @@
+{
+    "id": "5654D108",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1605658319524.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "expression": "Data_race_apr",
+        "caption": "Data_race_apr",
+        "totalObservations": 39,
+        "displayedObservations": 39,
+        "variables": 12,
+        "cacheKey": "17E81C05",
+        "object": "Data_race_apr",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=Data_race_apr&cache_key=17E81C05&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 140586099178720,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1605658319524,
+    "read_only": false,
+    "read_only_alternatives": []
+}
