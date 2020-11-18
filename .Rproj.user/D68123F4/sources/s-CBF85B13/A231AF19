@@ -3,23 +3,23 @@
     "path": "~/PM-566-first-project/Final Project/Final_Project /index.Rmd",
     "project_path": "index.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "3414354877",
     "contents": "",
     "dirty": false,
     "created": 1605144564256.0,
     "source_on_save": false,
     "relative_order": 1,
     "properties": {
-        "cursorPosition": "106,0",
+        "cursorPosition": "107,31",
         "scrollLine": "99",
         "last_setup_crc32": "CBF85B139a57ad95"
     },
     "folds": "61|73|97|0|\n99|48|103|0|\n126|55|135|0|\n138|56|147|0|\n148|56|157|0|\n159|56|168|0|\n170|63|185|0|\n187|64|201|0|\n203|74|220|0|\n253|81|284|0|\n286|88|319|0|\n",
-    "lastKnownWriteTime": 1605729451,
+    "lastKnownWriteTime": 1605730072,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1605729451107,
+    "last_content_update": 1605730072366,
     "read_only": false,
     "read_only_alternatives": []
 }
