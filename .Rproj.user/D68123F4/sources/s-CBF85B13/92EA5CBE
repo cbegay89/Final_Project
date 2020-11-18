@@ -3,13 +3,16 @@
     "path": "~/PM-566-first-project/Final Project/Final_Project /README.md",
     "project_path": "README.md",
     "type": "markdown",
-    "hash": "2567673966",
+    "hash": "0",
     "contents": "",
     "dirty": false,
     "created": 1605148202637.0,
     "source_on_save": false,
     "relative_order": 4,
-    "properties": {},
+    "properties": {
+        "cursorPosition": "1,0",
+        "scrollLine": "0"
+    },
     "folds": "",
     "lastKnownWriteTime": 1604792475,
     "encoding": "UTF-8",

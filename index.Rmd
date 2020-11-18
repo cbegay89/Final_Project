@@ -9,7 +9,8 @@ output:
 
 <br>
 
-Introduction: 
+# Introduction 
+
 The COVID Racial Data Tracker is a volunteer organization launched from The Atlantic and was created in collaboration between the COVID Tracking Project and the Boston University Center for Antiracist Research. On April 12, 2020, this team began collecting race and ethnicity data from every state and eventually US territories. The tracker is updated twice per week. This dataset includes the total number of COVID cases and number of reported deaths due to COVID by race and ethnicity. While this is the only COVID related dataset I could find that reports race and ethnicity, the project acknowledges this is not a comprehensive dataset on race and ethnicity. 
 As the COVID-19 pandemic unfolds, we are quickly learning about the disparity between race and COVID-19 cases. Currently Black, Indigenous, and Latinx people are most affected by COVID-19. As it stands, Black people have the highest disparity and are dying 2.3 times the rate of white people. American Indian and Alaska Native (AIAN) have the second highest disparity and currently have a death rate of 65 per 100,000 people compared to non-Hispanic white 43 per 100,000. Historically, AIAN communities are left out of the conversation when it comes to reporting data, especially emerging data like COVID-19 cases/deaths. The current national conversation around AIAN COVID disparities has been about (my tribe) the Navajo Nation, which at its worst, had the highest infection rate in the country (higher than New York in its peak). It is important to understand the rest of the landscape in the US when it comes to tribal communities as 70% of the AIAN population live in urban cities. I am using this project to explore AIAN COVID rates by state to understand where the highest disparities lie in both frequency and proximity. The questions I will be exploring in this project are (1) which states reported the highest AIAN COVID cases in the US and (2) which states reported the highest AIAN COVID deaths in the US?
 
@@ -104,7 +105,7 @@ Data_race_init <- Data_race_remove %>% filter(Date=="4/12/20")
 
 <br>
 
-## AIAN Covid-19 Cases by State as of 10/04/20 
+# AIAN Covid-19 Cases by State as of 10/04/20 
 
 This figure represents all reported American Indian and Alaska Native Covid-19 cases in the US by state* and DC. As of October 4th, the 3 highest reported AIAN cases are from Arizona, New Mexico, and Oklahoma. 
 
@@ -317,7 +318,7 @@ fig_Oct4_deaths <- fig
 
   
 ```
-## Heat Maps
+# Heat Maps
 
 These heat maps show AIAN Covid-19 cases and deaths over time by state. The reported numbers are cumulative by date. Although Oklahoma did not report a higher number of AIAN cases in the beginning of the pandemic, this heat map shows cases increased around August. AIAN cases were generally higher throughout the pandemic for Arizona and New Mexico.  
 
@@ -346,12 +347,12 @@ fig_hmapd2
 
 <br>
 
-## Scatter Plots
+# Scatter Plots
 This figure shows AIAN Covid-19 cases by state over time. A closer look at the 3 highest reporting states: AZ, NM, and OK. Separate scatter plots were used to show cases versus deaths over time. 
 
 <br>
 
-## Figures representing AIAN Covid cases by state over time {.tabset}
+## AIAN Covid cases by state over time {.tabset}
 
 ### All states
 ```{r p1, echo=FALSE}
@@ -377,7 +378,7 @@ Scatter_OK
 
 <br>
 
-## Maps
+# Maps
 
 Maps show geographic proximity of reported cases by state. This can be an important indicator given each state's AIAN population has a different rural versus urban population. In addition, resources for AIAN communities and tribes vary by state. An important piece to note is Michigan's initially reported 512 AIAN cases. This disparity was not detectable in the other graphs produced. However, by October 4th, we can see the disparity in cases in among Arizona, New Mexico and Oklahoma. 
 
