@@ -1,18 +1,20 @@
 ---
-title: "Covid-19 Cases among American Indian and Alaska Natives by State"
+title: "AIAN Covid-19 Cases by State"
 author: "Cynthia Begay"
-output: 
-    html_document:
-        toc: TRUE
-        toc_float: TRUE
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 ---
 
 <br>
 
 # Introduction 
 
-The COVID Racial Data Tracker is a volunteer organization launched from The Atlantic and was created in collaboration between the COVID Tracking Project and the Boston University Center for Antiracist Research. 
-As the COVID-19 pandemic unfolds, we are quickly learning about the disparity between race and COVID-19 cases. I am using this project to explore AIAN COVID rates by state to understand where the highest disparities lie in both frequency and proximity. The questions I will be exploring in this project are (1) how do AIAN COVID-19 rates/deaths compare between states, (2) which states reported the highest AIAN COVID cases in the US, and (3) which states reported the highest AIAN COVID deaths in the US?
+The COVID Racial Data Tracker is a volunteer organization launched from The Atlantic and was created in collaboration between the COVID Tracking Project and the Boston University Center for Antiracist Research. On April 12, 2020, this team began collecting race and ethnicity data from every state and eventually US territories. The tracker is updated twice per week. This dataset includes the total number of COVID cases and number of reported deaths due to COVID by race and ethnicity. While this is the only COVID related dataset I could find that reports race and ethnicity, the project acknowledges this is not a comprehensive dataset on race and ethnicity. 
+As the COVID-19 pandemic unfolds, we are quickly learning about the disparity between race and COVID-19 cases. Currently Black, Indigenous, and Latinx people are most affected by COVID-19. As it stands, Black people have the highest disparity and are dying 2.3 times the rate of white people. American Indian and Alaska Native (AIAN) have the second highest disparity and currently have a death rate of 65 per 100,000 people compared to non-Hispanic white 43 per 100,000. Historically, AIAN communities are left out of the conversation when it comes to reporting data, especially emerging data like COVID-19 cases/deaths. The current national conversation around AIAN COVID disparities has been about (my tribe) the Navajo Nation, which at its worst, had the highest infection rate in the country (higher than New York in its peak). It is important to understand the rest of the landscape in the US when it comes to tribal communities as 70% of the AIAN population live in urban cities. I am using this project to explore AIAN COVID rates by state to understand where the highest disparities lie in both frequency and proximity. The questions I will be exploring in this project are (1) which states reported the highest AIAN COVID cases in the US and (2) which states reported the highest AIAN COVID deaths in the US?
 
 
 <br>
@@ -61,10 +63,10 @@ opts_chunk$set(
 
 ```{r load-data, message=FALSE, echo=FALSE, warning=FALSE, include=FALSE}
 setwd("/Users/cynthiabegay/PM-566-first-project/Final Project")
-Data_race_original <-data.table::fread("RaceData_Final.csv")
+Data_race <-data.table::fread("RaceData_Final.csv")
 
 #Variables of interest are day, month, year, state, total cases, AIAN cases, AIAN deaths
-Data_race <- Data_race_original %>% select (Date, Month, Day, Year, State, State_Code, Cases_AIAN, Cases_Total, Deaths_AIAN, Deaths_Total)
+Data_race <- Data_race %>% select (Date, Month, Day, Year, State, State_Code, Cases_AIAN, Cases_Total, Deaths_AIAN, Deaths_Total)
 
 #Try it out
 Data_race %>% 
@@ -131,6 +133,7 @@ fig<-fig %>% layout(
               title = "AIAN Rates in US by State"
               )
 Scatter_US <- fig
+
 
 ```
 
@@ -306,10 +309,10 @@ fig <- plot_geo(Data_race_current, locationmode = 'USA-states') %>%
     color = ~Deaths_AIAN_fmt, colors = 'Reds'
   )
 
-fig <- fig %>% colorbar(title = "AIAN Covid-19 Deaths", limits = c(0,shadeLimit))
+fig <- fig %>% colorbar(title = "AIAN Covid-19 Cases", limits = c(0,shadeLimit))
 
 fig <- fig %>% layout(
-    title = paste('AIAN Covid-19 Deaths by State as of October 04, 2020', '<br>(Hover for value)'),
+    title = paste('AIAN Covid-19 Rates by State as of October 04, 2020', '<br>(Hover for value)'),
     geo = set_map_details
   )
 fig_Oct4_deaths <- fig
