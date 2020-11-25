@@ -7,6 +7,10 @@ navbar:
       href: index.html
     - text: "Download Report (PDF)"
       href: https://github.com/cbegay89/Final_Project/blob/master/PM566FinalReport.pdf
+    - text: "Source Code"
+      href: https://github.com/cbegay89/Final_Project/blob/master/index.Rmd
+    - text: "ReadMe file"
+      href: https://github.com/cbegay89/Final_Project/blob/master/README.md
   right:
     - icon: fa-github fa-lg
       href: https://github.com/USCbiostats/PM566
